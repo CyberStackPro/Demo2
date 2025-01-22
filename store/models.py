@@ -29,6 +29,13 @@ class Customer(models.Model):
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES)
     # orders = models.ManyToManyField(Order)
 
+    class Meta:
+        # ordering = ['first_name', 'last_name']
+        db_table = 'store_customer'
+        indexes = [
+            models.Index(fields=['first_name', 'last_name']),
+        ]
+
 
 class Collection(models.Model):
     title = models.CharField(max_length=200)
@@ -86,3 +93,4 @@ class Address(models.Model):
     city = models.CharField(max_length=250)
     customer = models.OneToOneField(
         Customer, on_delete=models.CASCADE, primary_key=True)
+    zip = models.CharField(max_length=5)
