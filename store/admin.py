@@ -7,9 +7,15 @@ from . import models
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'unit_price', 'inventory', 'collection']
-    list_editable = ['unit_price', 'inventory']
+    list_display = ['title', 'unit_price', 'inventory_status', 'collection']
+    list_editable = ['unit_price']
     prepopulated_fields = {'slug': ('title',)}
+
+    @admin.display(ordering='inventory', description='Inventory')
+    def inventory_status(self, product):
+        if product.inventory < 10:
+            return 'Low'
+        return 'OK'
 
 
 @admin.register(models.Customer)
