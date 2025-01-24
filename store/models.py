@@ -29,7 +29,7 @@ class Customer(models.Model):
     membership = models.CharField(
         max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
     # orders = models.ManyToManyField(Order)
-    orders = models.ManyToManyField('Order', through='OrderItem')
+    # orders = models.ManyToManyField('Order', through='OrderItem')
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

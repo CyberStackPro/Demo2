@@ -30,10 +30,19 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'email', 'membership', 'orders']
+    list_display = ['first_name', 'last_name',
+                    'email', 'membership', 'orders_count']
     list_editable = ['membership']
     ordering = ['first_name', 'last_name']
     list_per_page = 10
+
+    @admin.display(description='Orders Count')
+    def orders_count(self, customer):
+        url = (reverse('admin:store_order_changelist')
+               + '?' + urlencode({'customer__id': f'{customer.id}'}))
+        return format_html('<a href="{}">{}</a>', url, customer.order_set.count())
+        # Count the orders associated with this customer
+        # return customer.order_set.count()
 
 
 @admin.register(models.Order)
