@@ -1,5 +1,5 @@
 """Module providing a function printing python version."""
-
+from django.core.validators import MinValueValidator
 from django.db import models
 # Create your models here.
 
@@ -59,11 +59,12 @@ class Product(models.Model):
     title = models.CharField(max_length=120)
     slug = models.SlugField()
     description = models.TextField(blank=True, null=True)
-    unit_price = models.DecimalField(decimal_places=2, max_digits=6)
+    unit_price = models.DecimalField(
+        decimal_places=2, max_digits=6, validators=[MinValueValidator(1)])
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
-    promotions = models.ManyToManyField(Promotion)
+    promotions = models.ManyToManyField(Promotion, blank=True)
 
     def __str__(self) -> str:
         return self.title
