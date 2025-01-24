@@ -76,9 +76,18 @@ class CustomerAdmin(admin.ModelAdmin):
         # return customer.order_set.count()
 
 
+class OrderItemInline(admin.TabularInline):
+    # autocomplete_fields = ['product']
+    model = models.OrderItem
+    min_num = 1
+    extra = 0
+    max_num = 10
+
+
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'placed_at', 'customer']
+    inlines = [OrderItemInline]
     autocomplete_fields = ['customer']
 
 
