@@ -1,5 +1,7 @@
 from django.contrib import admin, messages
 from . import models
+from tags.models import TaggedItem
+from django.contrib.contenttypes.admin import GenericTabularInline
 from django.http.request import HttpRequest
 from django.db.models import Count
 from django.utils.html import format_html, urlencode
@@ -25,8 +27,14 @@ class InventoryFilter(admin.SimpleListFilter):
         return queryset.filter(inventory__gte=10)
 
 
+class TagInline(GenericTabularInline):
+    autocomplete_fields = ['tag']
+    model = TaggedItem
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    inlines = [TagInline]
     prepopulated_fields = {'slug': ('title',)}
     autocomplete_fields = ['collection']
     exclude = ['promotions']
