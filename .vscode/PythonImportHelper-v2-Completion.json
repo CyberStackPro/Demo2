@@ -442,6 +442,14 @@
         "documentation": {}
     },
     {
+        "label": "Collection",
+        "importPath": "store.models",
+        "description": "store.models",
+        "isExtraImport": true,
+        "detail": "store.models",
+        "documentation": {}
+    },
+    {
         "label": "Product",
         "importPath": "store.models",
         "description": "store.models",
@@ -764,11 +772,20 @@
         "documentation": {}
     },
     {
+        "label": "CollectionSerializers",
+        "kind": 6,
+        "importPath": "store.serializers",
+        "description": "store.serializers",
+        "peekOfCode": "class CollectionSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Collection\n        fields = ['id', 'title']\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\nclass ProductSerializers(serializers.Serializer):\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\n    price = serializers.DecimalField(",
+        "detail": "store.serializers",
+        "documentation": {}
+    },
+    {
         "label": "ProductSerializers",
         "kind": 6,
         "importPath": "store.serializers",
         "description": "store.serializers",
-        "peekOfCode": "class ProductSerializers(serializers.Serializer):\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\n    price = serializers.DecimalField(\n        max_digits=6, decimal_places=2, source='unit_price')\n    price_with_tax = serializers.SerializerMethodField(\n        method_name='calculate_tax')\n    def calculate_tax(self, product: Product):\n        return product.unit_price * Decimal(1.1)",
+        "peekOfCode": "class ProductSerializers(serializers.Serializer):\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\n    price = serializers.DecimalField(\n        max_digits=6, decimal_places=2, source='unit_price')\n    price_with_tax = serializers.SerializerMethodField(\n        method_name='calculate_tax')\n    # collection = serializers.PrimaryKeyRelatedField(\n    #     queryset=Collection.objects.all())\n    # collection = serializers.StringRelatedField()",
         "detail": "store.serializers",
         "documentation": {}
     },
@@ -777,7 +794,7 @@
         "kind": 5,
         "importPath": "store.urls",
         "description": "store.urls",
-        "peekOfCode": "urlpatterns = [\n    path('products/', views.product_list, name='product_list'),\n    path('products/<int:id>/', views.product_detail, name='product_detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('products/', views.product_list, name='product_list'),\n    path('products/<int:id>/', views.product_detail, name='product_detail'),\n    path('collections/<int:pk>/', views.collection_detail,\n         name='collection-detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),\n]",
         "detail": "store.urls",
         "documentation": {}
     },
@@ -786,7 +803,7 @@
         "kind": 2,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "def product_list(request):\n    queryset = Product.objects.all()\n    serializer = ProductSerializers(queryset, many=True)\n    return Response(serializer.data)\n@api_view()\ndef product_detail(request, id):\n    product = get_list_or_404(Product, pk=id)\n    serializers = ProductSerializers(product)\n    return Response(serializers.data)\n    # try:",
+        "peekOfCode": "def product_list(request):\n    queryset = Product.objects.select_related('collection').all()\n    serializer = ProductSerializers(\n        queryset, many=True, context={'request': request})\n    return Response(serializer.data)\n@api_view()\ndef product_detail(request, id):\n    product = get_list_or_404(Product, pk=id)\n    serializers = ProductSerializers(product)\n    return Response(serializers.data)",
         "detail": "store.views",
         "documentation": {}
     },
@@ -796,6 +813,15 @@
         "importPath": "store.views",
         "description": "store.views",
         "peekOfCode": "def product_detail(request, id):\n    product = get_list_or_404(Product, pk=id)\n    serializers = ProductSerializers(product)\n    return Response(serializers.data)\n    # try:\n    #     product = Product.objects.get(pk=id)\n    #     serializer = ProductSerializers(product)\n    #     return Response(serializer.data)\n    # except Product.DoesNotExist:\n    #     return Response(status=status.HTTP_404_NOT_FOUND)",
+        "detail": "store.views",
+        "documentation": {}
+    },
+    {
+        "label": "collection_detail",
+        "kind": 2,
+        "importPath": "store.views",
+        "description": "store.views",
+        "peekOfCode": "def collection_detail(request, pk):\n    return Response('ok')",
         "detail": "store.views",
         "documentation": {}
     },

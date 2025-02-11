@@ -14,8 +14,9 @@ from .serializers import ProductSerializers
 
 @api_view()
 def product_list(request):
-    queryset = Product.objects.all()
-    serializer = ProductSerializers(queryset, many=True)
+    queryset = Product.objects.select_related('collection').all()
+    serializer = ProductSerializers(
+        queryset, many=True, context={'request': request})
     return Response(serializer.data)
 
 
@@ -30,3 +31,8 @@ def product_detail(request, id):
     #     return Response(serializer.data)
     # except Product.DoesNotExist:
     #     return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view()
+def collection_detail(request, pk):
+    return Response('ok')
