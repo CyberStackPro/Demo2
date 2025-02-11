@@ -803,7 +803,7 @@
         "kind": 2,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "def product_list(request):\n    queryset = Product.objects.select_related('collection').all()\n    serializer = ProductSerializers(\n        queryset, many=True, context={'request': request})\n    return Response(serializer.data)\n@api_view()\ndef product_detail(request, id):\n    product = get_list_or_404(Product, pk=id)\n    serializers = ProductSerializers(product)\n    return Response(serializers.data)",
+        "peekOfCode": "def product_list(request):\n    if request.method == 'GET':\n        queryset = Product.objects.select_related('collection').all()\n        serializer = ProductSerializers(\n            queryset, many=True, context={'request': request})\n        return Response(serializer.data)\n    elif request.method == 'POST':\n        serializer = ProductSerializers(data=request.data)\n        # serializer._validated_data\n        return Response('ok')",
         "detail": "store.views",
         "documentation": {}
     },
