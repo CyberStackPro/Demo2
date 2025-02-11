@@ -305,7 +305,7 @@
         "documentation": {}
     },
     {
-        "label": "render",
+        "label": "get_list_or_404",
         "importPath": "django.shortcuts",
         "description": "django.shortcuts",
         "isExtraImport": true,
@@ -338,6 +338,14 @@
     },
     {
         "label": "reverse",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
         "importPath": "django.urls",
         "description": "django.urls",
         "isExtraImport": true,
@@ -406,6 +414,47 @@
         "description": "django.core.validators",
         "isExtraImport": true,
         "detail": "django.core.validators",
+        "documentation": {}
+    },
+    {
+        "label": "rest_framework",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "serializers",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "isExtraImport": true,
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "product_detail",
+        "importPath": "store.views",
+        "description": "store.views",
+        "isExtraImport": true,
+        "detail": "store.views",
+        "documentation": {}
+    },
+    {
+        "label": "api_view",
+        "importPath": "rest_framework.decorators",
+        "description": "rest_framework.decorators",
+        "isExtraImport": true,
+        "detail": "rest_framework.decorators",
+        "documentation": {}
+    },
+    {
+        "label": "Response",
+        "importPath": "rest_framework.response",
+        "description": "rest_framework.response",
+        "isExtraImport": true,
+        "detail": "rest_framework.response",
         "documentation": {}
     },
     {
@@ -699,6 +748,42 @@
         "documentation": {}
     },
     {
+        "label": "ProductSerializers",
+        "kind": 6,
+        "importPath": "store.serializers",
+        "description": "store.serializers",
+        "peekOfCode": "class ProductSerializers(serializers.Serializer):\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\n    unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)",
+        "detail": "store.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "store.urls",
+        "description": "store.urls",
+        "peekOfCode": "urlpatterns = [\n    path('products/', views.product_list, name='product_list'),\n    path('products/<int:id>/', views.product_detail, name='product_detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),\n]",
+        "detail": "store.urls",
+        "documentation": {}
+    },
+    {
+        "label": "product_list",
+        "kind": 2,
+        "importPath": "store.views",
+        "description": "store.views",
+        "peekOfCode": "def product_list(request):\n    queryset = Product.objects.all()\n    serializer = ProductSerializers(queryset, many=True)\n    return Response(serializer.data)\n@api_view()\ndef product_detail(request, id):\n    product = get_list_or_404(Product, pk=id)\n    serializers = ProductSerializers(product)\n    return Response(serializers.data)\n    # try:",
+        "detail": "store.views",
+        "documentation": {}
+    },
+    {
+        "label": "product_detail",
+        "kind": 2,
+        "importPath": "store.views",
+        "description": "store.views",
+        "peekOfCode": "def product_detail(request, id):\n    product = get_list_or_404(Product, pk=id)\n    serializers = ProductSerializers(product)\n    return Response(serializers.data)\n    # try:\n    #     product = Product.objects.get(pk=id)\n    #     serializer = ProductSerializers(product)\n    #     return Response(serializer.data)\n    # except Product.DoesNotExist:\n    #     return Response(status=status.HTTP_404_NOT_FOUND)",
+        "detail": "store.views",
+        "documentation": {}
+    },
+    {
         "label": "TagInline",
         "kind": 6,
         "importPath": "store_custome.admin",
@@ -856,7 +941,7 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {",
         "detail": "storefront.settings",
         "documentation": {}
     },
@@ -865,7 +950,7 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False",
         "detail": "storefront.settings",
         "documentation": {}
     },
@@ -874,7 +959,7 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False\n}",
         "detail": "storefront.settings",
         "documentation": {}
     },
@@ -883,7 +968,7 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "STATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "peekOfCode": "STATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False\n}",
         "detail": "storefront.settings",
         "documentation": {}
     },
@@ -892,7 +977,16 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False\n}",
+        "detail": "storefront.settings",
+        "documentation": {}
+    },
+    {
+        "label": "REST_FRAMEWORK",
+        "kind": 5,
+        "importPath": "storefront.settings",
+        "description": "storefront.settings",
+        "peekOfCode": "REST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False\n}",
         "detail": "storefront.settings",
         "documentation": {}
     },
@@ -901,7 +995,7 @@
         "kind": 5,
         "importPath": "storefront.urls",
         "description": "storefront.urls",
-        "peekOfCode": "admin.site.site_header = \"Storefront Admin\"\nadmin.site.site_title = \"Storefront Admin Portal\"\nadmin.site.index_title = \"Welcome to Storefront\"\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('playground/', include('playground.urls')),\n    path('__debug__/', include('debug_toolbar.urls')),\n]",
+        "peekOfCode": "admin.site.site_header = \"Storefront Admin\"\nadmin.site.site_title = \"Storefront Admin Portal\"\nadmin.site.index_title = \"Welcome to Storefront\"\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('store/', include('store.urls')),\n    path('__debug__/', include('debug_toolbar.urls')),\n]",
         "detail": "storefront.urls",
         "documentation": {}
     },
@@ -910,7 +1004,7 @@
         "kind": 5,
         "importPath": "storefront.urls",
         "description": "storefront.urls",
-        "peekOfCode": "admin.site.site_title = \"Storefront Admin Portal\"\nadmin.site.index_title = \"Welcome to Storefront\"\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('playground/', include('playground.urls')),\n    path('__debug__/', include('debug_toolbar.urls')),\n]",
+        "peekOfCode": "admin.site.site_title = \"Storefront Admin Portal\"\nadmin.site.index_title = \"Welcome to Storefront\"\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('store/', include('store.urls')),\n    path('__debug__/', include('debug_toolbar.urls')),\n]",
         "detail": "storefront.urls",
         "documentation": {}
     },
@@ -919,7 +1013,7 @@
         "kind": 5,
         "importPath": "storefront.urls",
         "description": "storefront.urls",
-        "peekOfCode": "admin.site.index_title = \"Welcome to Storefront\"\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('playground/', include('playground.urls')),\n    path('__debug__/', include('debug_toolbar.urls')),\n]",
+        "peekOfCode": "admin.site.index_title = \"Welcome to Storefront\"\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('store/', include('store.urls')),\n    path('__debug__/', include('debug_toolbar.urls')),\n]",
         "detail": "storefront.urls",
         "documentation": {}
     },
@@ -928,7 +1022,7 @@
         "kind": 5,
         "importPath": "storefront.urls",
         "description": "storefront.urls",
-        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('playground/', include('playground.urls')),\n    path('__debug__/', include('debug_toolbar.urls')),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('store/', include('store.urls')),\n    path('__debug__/', include('debug_toolbar.urls')),\n]",
         "detail": "storefront.urls",
         "documentation": {}
     },
