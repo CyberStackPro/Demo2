@@ -434,6 +434,30 @@
         "documentation": {}
     },
     {
+        "label": "Product",
+        "importPath": "store.models",
+        "description": "store.models",
+        "isExtraImport": true,
+        "detail": "store.models",
+        "documentation": {}
+    },
+    {
+        "label": "Product",
+        "importPath": "store.models",
+        "description": "store.models",
+        "isExtraImport": true,
+        "detail": "store.models",
+        "documentation": {}
+    },
+    {
+        "label": "Decimal",
+        "importPath": "decimal",
+        "description": "decimal",
+        "isExtraImport": true,
+        "detail": "decimal",
+        "documentation": {}
+    },
+    {
         "label": "product_detail",
         "importPath": "store.views",
         "description": "store.views",
@@ -471,14 +495,6 @@
         "description": "store.admin",
         "isExtraImport": true,
         "detail": "store.admin",
-        "documentation": {}
-    },
-    {
-        "label": "Product",
-        "importPath": "store.models",
-        "description": "store.models",
-        "isExtraImport": true,
-        "detail": "store.models",
         "documentation": {}
     },
     {
@@ -752,7 +768,7 @@
         "kind": 6,
         "importPath": "store.serializers",
         "description": "store.serializers",
-        "peekOfCode": "class ProductSerializers(serializers.Serializer):\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\n    unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)",
+        "peekOfCode": "class ProductSerializers(serializers.Serializer):\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\n    price = serializers.DecimalField(\n        max_digits=6, decimal_places=2, source='unit_price')\n    price_with_tax = serializers.SerializerMethodField(\n        method_name='calculate_tax')\n    def calculate_tax(self, product: Product):\n        return product.unit_price * Decimal(1.1)",
         "detail": "store.serializers",
         "documentation": {}
     },
