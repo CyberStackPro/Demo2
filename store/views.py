@@ -1,4 +1,4 @@
-from django.shortcuts import get_list_or_404
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -22,9 +22,10 @@ def product_list(request):
     elif request.method == 'POST':
         serializer = ProductSerializers(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.validated_data
+        serializer.save()
+        # print(serializer.validated_data)
         # return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response('OK')
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         # if serializer.is_valid():
         #     serializer._validated_data
@@ -33,11 +34,18 @@ def product_list(request):
         #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view()
+@api_view(['GET', 'PUT'])
 def product_detail(request, id):
-    product = get_list_or_404(Product, pk=id)
-    serializers = ProductSerializers(product)
-    return Response(serializers.data)
+    product = get_object_or_404(Product, pk=id)
+    if request.method == 'GET':
+        serializer = ProductSerializers(product)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        # product = Product.objects.get(pk=id)
+        serializer = ProductSerializers(product, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
     # try:
     #     product = Product.objects.get(pk=id)
     #     serializer = ProductSerializers(product)

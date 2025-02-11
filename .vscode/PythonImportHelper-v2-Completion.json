@@ -305,7 +305,7 @@
         "documentation": {}
     },
     {
-        "label": "get_list_or_404",
+        "label": "get_object_or_404",
         "importPath": "django.shortcuts",
         "description": "django.shortcuts",
         "isExtraImport": true,
@@ -784,7 +784,7 @@
         "kind": 6,
         "importPath": "store.serializers",
         "description": "store.serializers",
-        "peekOfCode": "class ProductSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Product\n        # fields = '__all__'\n        fields = ['id', 'title', 'unit_price', 'price_with_tax', 'collection']\n    # id = serializers.IntegerField()\n    # title = serializers.CharField(max_length=255)\n    # price = serializers.DecimalField(\n    #     max_digits=6, decimal_places=2, source='unit_price')\n    price_with_tax = serializers.SerializerMethodField(",
+        "peekOfCode": "class ProductSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Product\n        # fields = '__all__'\n        fields = ['id', 'title', 'description', 'unit_price',\n                  'slug', 'inventory', 'price_with_tax', 'collection']\n    # id = serializers.IntegerField()\n    # title = serializers.CharField(max_length=255)\n    # price = serializers.DecimalField(\n    #     max_digits=6, decimal_places=2, source='unit_price')",
         "detail": "store.serializers",
         "documentation": {}
     },
@@ -802,7 +802,7 @@
         "kind": 2,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "def product_list(request):\n    if request.method == 'GET':\n        queryset = Product.objects.select_related('collection').all()\n        serializer = ProductSerializers(\n            queryset, many=True, context={'request': request})\n        return Response(serializer.data)\n    elif request.method == 'POST':\n        serializer = ProductSerializers(data=request.data)\n        serializer.is_valid(raise_exception=True)\n        serializer.validated_data",
+        "peekOfCode": "def product_list(request):\n    if request.method == 'GET':\n        queryset = Product.objects.select_related('collection').all()\n        serializer = ProductSerializers(\n            queryset, many=True, context={'request': request})\n        return Response(serializer.data)\n    elif request.method == 'POST':\n        serializer = ProductSerializers(data=request.data)\n        serializer.is_valid(raise_exception=True)\n        serializer.save()",
         "detail": "store.views",
         "documentation": {}
     },
@@ -811,7 +811,7 @@
         "kind": 2,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "def product_detail(request, id):\n    product = get_list_or_404(Product, pk=id)\n    serializers = ProductSerializers(product)\n    return Response(serializers.data)\n    # try:\n    #     product = Product.objects.get(pk=id)\n    #     serializer = ProductSerializers(product)\n    #     return Response(serializer.data)\n    # except Product.DoesNotExist:\n    #     return Response(status=status.HTTP_404_NOT_FOUND)",
+        "peekOfCode": "def product_detail(request, id):\n    product = get_object_or_404(Product, pk=id)\n    if request.method == 'GET':\n        serializer = ProductSerializers(product)\n        return Response(serializer.data)\n    elif request.method == 'PUT':\n        # product = Product.objects.get(pk=id)\n        serializer = ProductSerializers(product, data=request.data)\n        serializer.is_valid(raise_exception=True)\n        serializer.save()",
         "detail": "store.views",
         "documentation": {}
     },
