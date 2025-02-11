@@ -776,7 +776,7 @@
         "kind": 6,
         "importPath": "store.serializers",
         "description": "store.serializers",
-        "peekOfCode": "class CollectionSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Collection\n        fields = ['id', 'title']\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\nclass ProductSerializers(serializers.Serializer):\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\n    price = serializers.DecimalField(",
+        "peekOfCode": "class CollectionSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Collection\n        fields = ['id', 'title']\n    # id = serializers.IntegerField()\n    # title = serializers.CharField(max_length=255)\n# class ProductSerializers(serializers.Serializer):\n#     id = serializers.IntegerField()\n#     title = serializers.CharField(max_length=255)\n#     price = serializers.DecimalField(",
         "detail": "store.serializers",
         "documentation": {}
     },
@@ -785,7 +785,7 @@
         "kind": 6,
         "importPath": "store.serializers",
         "description": "store.serializers",
-        "peekOfCode": "class ProductSerializers(serializers.Serializer):\n    id = serializers.IntegerField()\n    title = serializers.CharField(max_length=255)\n    price = serializers.DecimalField(\n        max_digits=6, decimal_places=2, source='unit_price')\n    price_with_tax = serializers.SerializerMethodField(\n        method_name='calculate_tax')\n    # collection = serializers.PrimaryKeyRelatedField(\n    #     queryset=Collection.objects.all())\n    # collection = serializers.StringRelatedField()",
+        "peekOfCode": "class ProductSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Product\n        # fields = '__all__'\n        fields = ['id', 'title', 'unit_price', 'price_with_tax', 'collection']\n    # id = serializers.IntegerField()\n    # title = serializers.CharField(max_length=255)\n    # price = serializers.DecimalField(\n    #     max_digits=6, decimal_places=2, source='unit_price')\n    price_with_tax = serializers.SerializerMethodField(",
         "detail": "store.serializers",
         "documentation": {}
     },
