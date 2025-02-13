@@ -473,14 +473,6 @@
         "documentation": {}
     },
     {
-        "label": "product_detail",
-        "importPath": "store.views",
-        "description": "store.views",
-        "isExtraImport": true,
-        "detail": "store.views",
-        "documentation": {}
-    },
-    {
         "label": "api_view",
         "importPath": "rest_framework.decorators",
         "description": "rest_framework.decorators",
@@ -494,6 +486,30 @@
         "description": "rest_framework.response",
         "isExtraImport": true,
         "detail": "rest_framework.response",
+        "documentation": {}
+    },
+    {
+        "label": "ListModelMixin",
+        "importPath": "rest_framework.mixins",
+        "description": "rest_framework.mixins",
+        "isExtraImport": true,
+        "detail": "rest_framework.mixins",
+        "documentation": {}
+    },
+    {
+        "label": "CreateModelMixin",
+        "importPath": "rest_framework.mixins",
+        "description": "rest_framework.mixins",
+        "isExtraImport": true,
+        "detail": "rest_framework.mixins",
+        "documentation": {}
+    },
+    {
+        "label": "ListCreateAPIView",
+        "importPath": "rest_framework.generics",
+        "description": "rest_framework.generics",
+        "isExtraImport": true,
+        "detail": "rest_framework.generics",
         "documentation": {}
     },
     {
@@ -809,7 +825,7 @@
         "kind": 6,
         "importPath": "store.serializers",
         "description": "store.serializers",
-        "peekOfCode": "class CollectionSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Collection\n        fields = ['id', 'title', 'products_count']\n    # id = serializers.IntegerField()\n    # title = serializers.CharField(max_length=255)\n    products_count = serializers.IntegerField()\n    # def products_count(self, collection: Collection):\n    #     return collection.featured_product.count()\n# class ProductSerializers(serializers.Serializer):",
+        "peekOfCode": "class CollectionSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Collection\n        fields = ['id', 'title', 'products_count']\n    # id = serializers.IntegerField()\n    # title = serializers.CharField(max_length=255)\n    products_count = serializers.IntegerField(read_only=True)\n    # def products_count(self, collection: Collection):\n    #     return collection.featured_product.count()\n# class ProductSerializers(serializers.Serializer):",
         "detail": "store.serializers",
         "documentation": {}
     },
@@ -827,43 +843,43 @@
         "kind": 5,
         "importPath": "store.urls",
         "description": "store.urls",
-        "peekOfCode": "urlpatterns = [\n    path('products/', views.product_list, name='product_list'),\n    path('products/<int:id>/', views.product_detail, name='product_detail'),\n    path('collections/', views.collection_list, name='collection_list'),\n    path('collections/<int:pk>/', views.collection_detail,\n         name='collection-detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),\n]",
+        "peekOfCode": "urlpatterns = [\n    # path('products/', views.product_list, name='product_list'),\n    path('products/', views.ProductList.as_view(), name='product_list'),\n    path('products/<int:id>/', views.ProductDetail.as_view(), name='product_detail'),\n    path('collections/', views.CollectionList.as_view(), name='collection_list'),\n    path('collections/<int:pk>/', views.CollectionDetail.as_view(),\n         name='collection-detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),",
         "detail": "store.urls",
         "documentation": {}
     },
     {
-        "label": "product_list",
-        "kind": 2,
+        "label": "ProductList",
+        "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "def product_list(request):\n    if request.method == 'GET':\n        queryset = Product.objects.select_related('collection').all()\n        serializer = ProductSerializers(\n            queryset, many=True, context={'request': request})\n        return Response(serializer.data)\n    elif request.method == 'POST':\n        serializer = ProductSerializers(data=request.data)\n        serializer.is_valid(raise_exception=True)\n        serializer.save()",
+        "peekOfCode": "class ProductList(ListCreateAPIView):\n    queryset = Product.objects.select_related('collection').all()\n    serializer_class = ProductSerializers\n    # if we don't have any logic we don't need this\n    # def get_queryset(self):\n    #     return Product.objects.select_related('collection').all()\n    # def get_serializer_class(self):\n    #     return ProductSerializers\n    def get_serializer_context(self):\n        return {'request': self.request}",
         "detail": "store.views",
         "documentation": {}
     },
     {
-        "label": "product_detail",
-        "kind": 2,
+        "label": "ProductDetail",
+        "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "def product_detail(request, id):\n    product = get_object_or_404(Product, pk=id)\n    if request.method == 'GET':\n        serializer = ProductSerializers(product)\n        return Response(serializer.data)\n    elif request.method == 'PUT':\n        # product = Product.objects.get(pk=id)\n        serializer = ProductSerializers(product, data=request.data)\n        serializer.is_valid(raise_exception=True)\n        serializer.save()",
+        "peekOfCode": "class ProductDetail(APIView):\n    # product = get_object_or_404(Product, pk=id)\n    def get(self, request, id):\n        product = get_object_or_404(Product, pk=id)\n        serializer = ProductSerializers(product)\n        return Response(serializer.data)\n    def put(self, request, id):\n        product = get_object_or_404(Product, pk=id)\n        serializer = ProductSerializers(product, data=request.data)\n        serializer.is_valid(raise_exception=True)",
         "detail": "store.views",
         "documentation": {}
     },
     {
-        "label": "collection_list",
-        "kind": 2,
+        "label": "CollectionList",
+        "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "def collection_list(request):\n    if request.method == 'GET':\n        # queryset = Collection.objects.select_related('co')\n        queryset = Collection.objects.annotate(\n            products_count=Count('product')).all()\n        serializer = CollectionSerializers(\n            queryset, many=True, context={'request': request})\n        return Response(serializer.data)\n    elif request.method == 'POST':\n        serializer = CollectionSerializers(data=request.data)",
+        "peekOfCode": "class CollectionList(ListCreateAPIView):\n    def get_queryset(self):\n        return Collection.objects.annotate(\n            products_count=Count('products')).all()\n    def get_serializer_class(self):\n        return CollectionSerializers\n    def get_serializer_context(self):\n        return {'request': self.request}\n    # def get(self, request):\n    #     queryset = Collection.objects.annotate(",
         "detail": "store.views",
         "documentation": {}
     },
     {
-        "label": "collection_detail",
-        "kind": 2,
+        "label": "CollectionDetail",
+        "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "def collection_detail(request, pk):\n    collection = get_object_or_404(Collection.objects.annotate(\n        products_count=Count('products')), pk=pk)\n    if request.method == 'GET':\n        serializer = CollectionSerializers(collection)\n        return Response(serializer.data)\n    elif request.method == 'PUT':\n        serializer = CollectionSerializers(collection, data=request.data)\n        serializer.is_valid(raise_exception=True)\n        print(serializer.validated_data)",
+        "peekOfCode": "class CollectionDetail(APIView):\n    def get(self, request, pk):\n        collection = get_object_or_404(Collection.objects.annotate(\n            products_count=Count('products')), pk=pk)\n        serializer = Collection.objects.annotate(collection)\n        return Response(serializer.data)\n    def put(self, request, pk):\n        collection = get_object_or_404(Collection.objects.annotate(\n            products_count=Count('products')), pk=pk)\n        serializer = CollectionSerializers(collection, data=request.data)",
         "detail": "store.views",
         "documentation": {}
     },
