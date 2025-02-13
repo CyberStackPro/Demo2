@@ -353,6 +353,14 @@
         "documentation": {}
     },
     {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
         "label": "path",
         "importPath": "django.urls",
         "description": "django.urls",
@@ -470,6 +478,30 @@
         "description": "decimal",
         "isExtraImport": true,
         "detail": "decimal",
+        "documentation": {}
+    },
+    {
+        "label": "SimpleRouter",
+        "importPath": "rest_framework.routers",
+        "description": "rest_framework.routers",
+        "isExtraImport": true,
+        "detail": "rest_framework.routers",
+        "documentation": {}
+    },
+    {
+        "label": "pprint",
+        "importPath": "pprint",
+        "description": "pprint",
+        "isExtraImport": true,
+        "detail": "pprint",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "importPath": "playground.urls",
+        "description": "playground.urls",
+        "isExtraImport": true,
+        "detail": "playground.urls",
         "documentation": {}
     },
     {
@@ -855,11 +887,20 @@
         "documentation": {}
     },
     {
+        "label": "router",
+        "kind": 5,
+        "importPath": "store.urls",
+        "description": "store.urls",
+        "peekOfCode": "router = SimpleRouter()\nrouter.register('products', views.ProductViewSet)\nrouter.register('collections', views.CollectionViewSet)\npprint(\n    router.urls\n)\n# urlpatterns = [\n#     path('products/', views.product_list, name='product_list'),\n#     path('products/', views.ProductList.as_view(), name='product_list'),\n#     path('products/<int:pk>/', views.ProductDetail.as_view(), name='product_detail'),",
+        "detail": "store.urls",
+        "documentation": {}
+    },
+    {
         "label": "urlpatterns",
         "kind": 5,
         "importPath": "store.urls",
         "description": "store.urls",
-        "peekOfCode": "urlpatterns = [\n    # path('products/', views.product_list, name='product_list'),\n    path('products/', views.ProductList.as_view(), name='product_list'),\n    path('products/<int:pk>/', views.ProductDetail.as_view(), name='product_detail'),\n    path('collections/', views.CollectionList.as_view(), name='collection_list'),\n    path('collections/<int:pk>/', views.CollectionDetail.as_view(),\n         name='collection-detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),",
+        "peekOfCode": "urlpatterns = [\n    path('', include(router.urls))\n]",
         "detail": "store.urls",
         "documentation": {}
     },
@@ -868,7 +909,7 @@
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class ProductViewSet(ModelViewSet):\n    queryset = Product.objects.select_related('collection').all()\n    serializer_class = ProductSerializers\n    def get_serializer_context(self):\n        return {'request': self.request}\n    def delete(self, request, pk):\n        product = get_object_or_404(Product, pk=pk)\n        if product.orderitems.count() > 0:\n            return Response({'error': 'Product cannot be deleted because it is associated with an order item.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)\n        product.delete()",
+        "peekOfCode": "class ProductViewSet(ModelViewSet):\n    queryset = Product.objects.select_related('collection').all()\n    serializer_class = ProductSerializers\n    def get_serializer_context(self):\n        return {'request': self.request}\n    def destroy(self, request, *args, **kwargs):\n        if OrderItem.objects.filter(product_id=kwargs['pk']).count() > 0:\n            return Response({'error': 'Product cannot be deleted because it is associated with an order item.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)\n        return super().destroy(request, *args, **kwargs)\n    # def delete(self, request, pk):",
         "detail": "store.views",
         "documentation": {}
     },
