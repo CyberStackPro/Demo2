@@ -108,17 +108,28 @@ class CollectionAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request: HttpRequest):
         return super().get_queryset(request).annotate(
-            products_count=Count('product')
+            products_count=Count('products')
         )
 
+
+@admin.register(models.CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    # autocomplete_fields = ['product']
+    list_display = ['cart', 'product', 'quantity']
+
+
+@admin.register(models.Cart)
+class CartAdmin(admin.ModelAdmin):
+    # autocomplete_fields = ['product']
+    list_display = ['id', 'created_at']
 # admin.site.register(models.Product, ProductAdmin)
 
 # admin.site.register(models.Customer)
 
 
-admin.site.register(models.Cart)
+# admin.site.register(models.Cart)
 
-admin.site.register(models.CartItem)
+# admin.site.register(models.CartItem)
 
 # admin.site.register(models.Order)
 

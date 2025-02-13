@@ -393,6 +393,14 @@
         "documentation": {}
     },
     {
+        "label": "Count",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
         "label": "format_html",
         "importPath": "django.utils.html",
         "description": "django.utils.html",
@@ -486,6 +494,14 @@
         "description": "rest_framework.response",
         "isExtraImport": true,
         "detail": "rest_framework.response",
+        "documentation": {}
+    },
+    {
+        "label": "APIView",
+        "importPath": "rest_framework.views",
+        "description": "rest_framework.views",
+        "isExtraImport": true,
+        "detail": "rest_framework.views",
         "documentation": {}
     },
     {
@@ -681,6 +697,24 @@
         "documentation": {}
     },
     {
+        "label": "CartItemAdmin",
+        "kind": 6,
+        "importPath": "store.admin",
+        "description": "store.admin",
+        "peekOfCode": "class CartItemAdmin(admin.ModelAdmin):\n    # autocomplete_fields = ['product']\n    list_display = ['cart', 'product', 'quantity']\n@admin.register(models.Cart)\nclass CartAdmin(admin.ModelAdmin):\n    # autocomplete_fields = ['product']\n    list_display = ['id', 'created_at']\n# admin.site.register(models.Product, ProductAdmin)\n# admin.site.register(models.Customer)\n# admin.site.register(models.Cart)",
+        "detail": "store.admin",
+        "documentation": {}
+    },
+    {
+        "label": "CartAdmin",
+        "kind": 6,
+        "importPath": "store.admin",
+        "description": "store.admin",
+        "peekOfCode": "class CartAdmin(admin.ModelAdmin):\n    # autocomplete_fields = ['product']\n    list_display = ['id', 'created_at']\n# admin.site.register(models.Product, ProductAdmin)\n# admin.site.register(models.Customer)\n# admin.site.register(models.Cart)\n# admin.site.register(models.CartItem)\n# admin.site.register(models.Order)\nadmin.site.register(models.OrderItem)\nadmin.site.register(models.Address)",
+        "detail": "store.admin",
+        "documentation": {}
+    },
+    {
         "label": "StoreConfig",
         "kind": 6,
         "importPath": "store.apps",
@@ -721,7 +755,7 @@
         "kind": 6,
         "importPath": "store.models",
         "description": "store.models",
-        "peekOfCode": "class Product(models.Model):\n    title = models.CharField(max_length=120)\n    slug = models.SlugField()\n    description = models.TextField(blank=True, null=True)\n    unit_price = models.DecimalField(\n        decimal_places=2, max_digits=6, validators=[MinValueValidator(1)])\n    inventory = models.IntegerField()\n    last_update = models.DateTimeField(auto_now=True)\n    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)\n    promotions = models.ManyToManyField(Promotion, blank=True)",
+        "peekOfCode": "class Product(models.Model):\n    title = models.CharField(max_length=120)\n    slug = models.SlugField()\n    description = models.TextField(blank=True, null=True)\n    unit_price = models.DecimalField(\n        decimal_places=2, max_digits=6, validators=[MinValueValidator(1)])\n    inventory = models.IntegerField()\n    last_update = models.DateTimeField(auto_now=True)\n    collection = models.ForeignKey(\n        Collection, on_delete=models.PROTECT, related_name='products')",
         "detail": "store.models",
         "documentation": {}
     },
@@ -775,7 +809,7 @@
         "kind": 6,
         "importPath": "store.serializers",
         "description": "store.serializers",
-        "peekOfCode": "class CollectionSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Collection\n        fields = ['id', 'title']\n    # id = serializers.IntegerField()\n    # title = serializers.CharField(max_length=255)\n# class ProductSerializers(serializers.Serializer):\n#     id = serializers.IntegerField()\n#     title = serializers.CharField(max_length=255)\n#     price = serializers.DecimalField(",
+        "peekOfCode": "class CollectionSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Collection\n        fields = ['id', 'title', 'products_count']\n    # id = serializers.IntegerField()\n    # title = serializers.CharField(max_length=255)\n    products_count = serializers.IntegerField()\n    # def products_count(self, collection: Collection):\n    #     return collection.featured_product.count()\n# class ProductSerializers(serializers.Serializer):",
         "detail": "store.serializers",
         "documentation": {}
     },
@@ -793,7 +827,7 @@
         "kind": 5,
         "importPath": "store.urls",
         "description": "store.urls",
-        "peekOfCode": "urlpatterns = [\n    path('products/', views.product_list, name='product_list'),\n    path('products/<int:id>/', views.product_detail, name='product_detail'),\n    path('collections/<int:pk>/', views.collection_detail,\n         name='collection-detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('products/', views.product_list, name='product_list'),\n    path('products/<int:id>/', views.product_detail, name='product_detail'),\n    path('collections/', views.collection_list, name='collection_list'),\n    path('collections/<int:pk>/', views.collection_detail,\n         name='collection-detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),\n]",
         "detail": "store.urls",
         "documentation": {}
     },
@@ -816,11 +850,20 @@
         "documentation": {}
     },
     {
+        "label": "collection_list",
+        "kind": 2,
+        "importPath": "store.views",
+        "description": "store.views",
+        "peekOfCode": "def collection_list(request):\n    if request.method == 'GET':\n        # queryset = Collection.objects.select_related('co')\n        queryset = Collection.objects.annotate(\n            products_count=Count('product')).all()\n        serializer = CollectionSerializers(\n            queryset, many=True, context={'request': request})\n        return Response(serializer.data)\n    elif request.method == 'POST':\n        serializer = CollectionSerializers(data=request.data)",
+        "detail": "store.views",
+        "documentation": {}
+    },
+    {
         "label": "collection_detail",
         "kind": 2,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "def collection_detail(request, pk):\n    return Response('ok')",
+        "peekOfCode": "def collection_detail(request, pk):\n    collection = get_object_or_404(Collection.objects.annotate(\n        products_count=Count('products')), pk=pk)\n    if request.method == 'GET':\n        serializer = CollectionSerializers(collection)\n        return Response(serializer.data)\n    elif request.method == 'PUT':\n        serializer = CollectionSerializers(collection, data=request.data)\n        serializer.is_valid(raise_exception=True)\n        print(serializer.validated_data)",
         "detail": "store.views",
         "documentation": {}
     },
