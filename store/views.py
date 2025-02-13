@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import status
 from .models import Collection, Product
 from .serializers import CollectionSerializers, ProductSerializers
@@ -43,23 +43,26 @@ class ProductList(ListCreateAPIView):
     #     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ProductDetail(APIView):
+class ProductDetail(RetrieveUpdateDestroyAPIView):
     # product = get_object_or_404(Product, pk=id)
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializers
 
-    def get(self, request, id):
-        product = get_object_or_404(Product, pk=id)
-        serializer = ProductSerializers(product)
-        return Response(serializer.data)
+    # def get(self, request, id):
+    #     product = get_object_or_404(Product, pk=id)
+    #     serializer = ProductSerializers(product)
+    #     return Response(serializer.data)
 
-    def put(self, request, id):
-        product = get_object_or_404(Product, pk=id)
-        serializer = ProductSerializers(product, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+# already implemented b/c we Used RUDA
+    # def put(self, request, id):
+    #     product = get_object_or_404(Product, pk=id)
+    #     serializer = ProductSerializers(product, data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response(serializer.data)
 
-    def delete(self, request, id):
-        product = get_object_or_404(Product, pk=id)
+    def delete(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
         if product.orderitems.count() > 0:
             return Response({'error': 'Product cannot be deleted because it is associated with an order item.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         product.delete()
@@ -171,22 +174,26 @@ class CollectionList(ListCreateAPIView):
     #     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class CollectionDetail(APIView):
-    def get(self, request, pk):
-        collection = get_object_or_404(Collection.objects.annotate(
-            products_count=Count('products')), pk=pk)
-        serializer = Collection.objects.annotate(collection)
-        return Response(serializer.data)
+class CollectionDetail(RetrieveUpdateDestroyAPIView):
+    # queryset = Product.objects.all()
+    queryset = Collection.objects.annotate()
+    serializer_class = CollectionSerializers
 
-    def put(self, request, pk):
-        collection = get_object_or_404(Collection.objects.annotate(
-            products_count=Count('products')), pk=pk)
+    # def get(self, request, pk):
+    #     collection = get_object_or_404(Collection.objects.annotate(
+    #         products_count=Count('products')), pk=pk)
+    #     serializer = Collection.objects.annotate(collection)
+    #     return Response(serializer.data)
 
-        serializer = CollectionSerializers(collection, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data)
-        serializer.save()
-        return Response(serializer.data)
+    # def put(self, request, pk):
+    #     collection = get_object_or_404(Collection.objects.annotate(
+    #         products_count=Count('products')), pk=pk)
+
+    #     serializer = CollectionSerializers(collection, data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     print(serializer.validated_data)
+    #     serializer.save()
+    #     return Response(serializer.data)
 
     def delete(self, request, pk):
         collection = get_object_or_404(Collection.objects.annotate(

@@ -513,6 +513,14 @@
         "documentation": {}
     },
     {
+        "label": "RetrieveUpdateDestroyAPIView",
+        "importPath": "rest_framework.generics",
+        "description": "rest_framework.generics",
+        "isExtraImport": true,
+        "detail": "rest_framework.generics",
+        "documentation": {}
+    },
+    {
         "label": "APIView",
         "importPath": "rest_framework.views",
         "description": "rest_framework.views",
@@ -843,7 +851,7 @@
         "kind": 5,
         "importPath": "store.urls",
         "description": "store.urls",
-        "peekOfCode": "urlpatterns = [\n    # path('products/', views.product_list, name='product_list'),\n    path('products/', views.ProductList.as_view(), name='product_list'),\n    path('products/<int:id>/', views.ProductDetail.as_view(), name='product_detail'),\n    path('collections/', views.CollectionList.as_view(), name='collection_list'),\n    path('collections/<int:pk>/', views.CollectionDetail.as_view(),\n         name='collection-detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),",
+        "peekOfCode": "urlpatterns = [\n    # path('products/', views.product_list, name='product_list'),\n    path('products/', views.ProductList.as_view(), name='product_list'),\n    path('products/<int:pk>/', views.ProductDetail.as_view(), name='product_detail'),\n    path('collections/', views.CollectionList.as_view(), name='collection_list'),\n    path('collections/<int:pk>/', views.CollectionDetail.as_view(),\n         name='collection-detail'),\n    # path('', views.product_list, name='product_list'),\n    # path('tags/<slug:tag_slug>', views.product_list, name='product_list_by_tag'),\n    # path('<int:id>/<slug:slug>', views.product_detail, name='product_detail'),",
         "detail": "store.urls",
         "documentation": {}
     },
@@ -861,7 +869,7 @@
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class ProductDetail(APIView):\n    # product = get_object_or_404(Product, pk=id)\n    def get(self, request, id):\n        product = get_object_or_404(Product, pk=id)\n        serializer = ProductSerializers(product)\n        return Response(serializer.data)\n    def put(self, request, id):\n        product = get_object_or_404(Product, pk=id)\n        serializer = ProductSerializers(product, data=request.data)\n        serializer.is_valid(raise_exception=True)",
+        "peekOfCode": "class ProductDetail(RetrieveUpdateDestroyAPIView):\n    # product = get_object_or_404(Product, pk=id)\n    queryset = Product.objects.all()\n    serializer_class = ProductSerializers\n    # def get(self, request, id):\n    #     product = get_object_or_404(Product, pk=id)\n    #     serializer = ProductSerializers(product)\n    #     return Response(serializer.data)\n# already implemented b/c we Used RUDA\n    # def put(self, request, id):",
         "detail": "store.views",
         "documentation": {}
     },
@@ -879,7 +887,7 @@
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class CollectionDetail(APIView):\n    def get(self, request, pk):\n        collection = get_object_or_404(Collection.objects.annotate(\n            products_count=Count('products')), pk=pk)\n        serializer = Collection.objects.annotate(collection)\n        return Response(serializer.data)\n    def put(self, request, pk):\n        collection = get_object_or_404(Collection.objects.annotate(\n            products_count=Count('products')), pk=pk)\n        serializer = CollectionSerializers(collection, data=request.data)",
+        "peekOfCode": "class CollectionDetail(RetrieveUpdateDestroyAPIView):\n    # queryset = Product.objects.all()\n    queryset = Collection.objects.annotate()\n    serializer_class = CollectionSerializers\n    # def get(self, request, pk):\n    #     collection = get_object_or_404(Collection.objects.annotate(\n    #         products_count=Count('products')), pk=pk)\n    #     serializer = Collection.objects.annotate(collection)\n    #     return Response(serializer.data)\n    # def put(self, request, pk):",
         "detail": "store.views",
         "documentation": {}
     },
