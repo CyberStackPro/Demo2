@@ -521,6 +521,14 @@
         "documentation": {}
     },
     {
+        "label": "ModelViewSet",
+        "importPath": "rest_framework.viewsets",
+        "description": "rest_framework.viewsets",
+        "isExtraImport": true,
+        "detail": "rest_framework.viewsets",
+        "documentation": {}
+    },
+    {
         "label": "APIView",
         "importPath": "rest_framework.views",
         "description": "rest_framework.views",
@@ -856,38 +864,20 @@
         "documentation": {}
     },
     {
-        "label": "ProductList",
+        "label": "ProductViewSet",
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class ProductList(ListCreateAPIView):\n    queryset = Product.objects.select_related('collection').all()\n    serializer_class = ProductSerializers\n    # if we don't have any logic we don't need this\n    # def get_queryset(self):\n    #     return Product.objects.select_related('collection').all()\n    # def get_serializer_class(self):\n    #     return ProductSerializers\n    def get_serializer_context(self):\n        return {'request': self.request}",
+        "peekOfCode": "class ProductViewSet(ModelViewSet):\n    queryset = Product.objects.select_related('collection').all()\n    serializer_class = ProductSerializers\n    def get_serializer_context(self):\n        return {'request': self.request}\n    def delete(self, request, pk):\n        product = get_object_or_404(Product, pk=pk)\n        if product.orderitems.count() > 0:\n            return Response({'error': 'Product cannot be deleted because it is associated with an order item.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)\n        product.delete()",
         "detail": "store.views",
         "documentation": {}
     },
     {
-        "label": "ProductDetail",
+        "label": "CollectionViewSet",
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class ProductDetail(RetrieveUpdateDestroyAPIView):\n    # product = get_object_or_404(Product, pk=id)\n    queryset = Product.objects.all()\n    serializer_class = ProductSerializers\n    # def get(self, request, id):\n    #     product = get_object_or_404(Product, pk=id)\n    #     serializer = ProductSerializers(product)\n    #     return Response(serializer.data)\n# already implemented b/c we Used RUDA\n    # def put(self, request, id):",
-        "detail": "store.views",
-        "documentation": {}
-    },
-    {
-        "label": "CollectionList",
-        "kind": 6,
-        "importPath": "store.views",
-        "description": "store.views",
-        "peekOfCode": "class CollectionList(ListCreateAPIView):\n    def get_queryset(self):\n        return Collection.objects.annotate(\n            products_count=Count('products')).all()\n    def get_serializer_class(self):\n        return CollectionSerializers\n    def get_serializer_context(self):\n        return {'request': self.request}\n    # def get(self, request):\n    #     queryset = Collection.objects.annotate(",
-        "detail": "store.views",
-        "documentation": {}
-    },
-    {
-        "label": "CollectionDetail",
-        "kind": 6,
-        "importPath": "store.views",
-        "description": "store.views",
-        "peekOfCode": "class CollectionDetail(RetrieveUpdateDestroyAPIView):\n    # queryset = Product.objects.all()\n    queryset = Collection.objects.annotate()\n    serializer_class = CollectionSerializers\n    # def get(self, request, pk):\n    #     collection = get_object_or_404(Collection.objects.annotate(\n    #         products_count=Count('products')), pk=pk)\n    #     serializer = Collection.objects.annotate(collection)\n    #     return Response(serializer.data)\n    # def put(self, request, pk):",
+        "peekOfCode": "class CollectionViewSet(ModelViewSet):\n    queryset = Collection.objects.annotate(\n        products_count=Count('products')).all()\n    serializer_class = CollectionSerializers\n    def delete(self, request, pk):\n        collection = get_object_or_404(Collection.objects.annotate(\n            products_count=Count('products')), pk=pk)\n        if collection.count() > 0:\n            return Response({'error': 'Collection cannot be deleted because it is associated with a product.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)\n        collection.delete()",
         "detail": "store.views",
         "documentation": {}
     },
