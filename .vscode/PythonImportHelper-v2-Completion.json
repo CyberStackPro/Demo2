@@ -89,6 +89,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -418,6 +434,15 @@
         "documentation": {}
     },
     {
+        "label": "datetime",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "datetime",
+        "description": "datetime",
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
         "label": "HttpRequest",
         "importPath": "django.http.request",
         "description": "django.http.request",
@@ -511,6 +536,14 @@
         "description": "decimal",
         "isExtraImport": true,
         "detail": "decimal",
+        "documentation": {}
+    },
+    {
+        "label": "routers",
+        "importPath": "rest_framework_nested",
+        "description": "rest_framework_nested",
+        "isExtraImport": true,
+        "detail": "rest_framework_nested",
         "documentation": {}
     },
     {
@@ -749,6 +782,15 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "store.migrations.0004_review_date_alter_review_description",
+        "description": "store.migrations.0004_review_date_alter_review_description",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        (\"store\", \"0003_alter_orderitem_product_alter_product_collection_and_more\"),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name=\"review\",\n            name=\"date\",\n            field=models.DateField(\n                auto_now_add=True,",
+        "detail": "store.migrations.0004_review_date_alter_review_description",
+        "documentation": {}
+    },
+    {
         "label": "InventoryFilter",
         "kind": 6,
         "importPath": "store.admin",
@@ -915,7 +957,7 @@
         "kind": 6,
         "importPath": "store.models",
         "description": "store.models",
-        "peekOfCode": "class Review(models.Model):\n    product = models.ForeignKey(\n        Product, on_delete=models.CASCADE, related_name='reviews')\n    name = models.CharField(max_length=255)\n    description = models.DateField(auto_now_add=True)",
+        "peekOfCode": "class Review(models.Model):\n    product = models.ForeignKey(\n        Product, on_delete=models.CASCADE, related_name='reviews')\n    name = models.CharField(max_length=255)\n    description = models.TextField()\n    date = models.DateField(auto_now_add=True)\n    # date = models.DateField(auto_now_add=True)",
         "detail": "store.models",
         "documentation": {}
     },
@@ -942,7 +984,7 @@
         "kind": 6,
         "importPath": "store.serializers",
         "description": "store.serializers",
-        "peekOfCode": "class ReviewSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Review\n        fields = ['id', 'date', 'name', 'description', 'product']",
+        "peekOfCode": "class ReviewSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Review\n        fields = ['id', 'date', 'name', 'description']\n    def create(self, validated_data):\n        product_id = self.context['product_id']\n        return Review.objects.create(product_id=product_id, **validated_data)",
         "detail": "store.serializers",
         "documentation": {}
     },
@@ -951,7 +993,16 @@
         "kind": 5,
         "importPath": "store.urls",
         "description": "store.urls",
-        "peekOfCode": "router = SimpleRouter()\nrouter.register('products', views.ProductViewSet)\nrouter.register('collections', views.CollectionViewSet)\npprint(\n    router.urls\n)\n# urlpatterns = [\n#     path('products/', views.product_list, name='product_list'),\n#     path('products/', views.ProductList.as_view(), name='product_list'),\n#     path('products/<int:pk>/', views.ProductDetail.as_view(), name='product_detail'),",
+        "peekOfCode": "router = routers.DefaultRouter()\nrouter.register('products', views.ProductViewSet)\nrouter.register('collections', views.CollectionViewSet)\n# pprint(\n#     router.urls\n# )\nproducts_router = routers.NestedDefaultRouter(\n    router, 'products', lookup='product')\nproducts_router.register('reviews', views.ReviewViewSet,\n                         basename='product-reviews')",
+        "detail": "store.urls",
+        "documentation": {}
+    },
+    {
+        "label": "products_router",
+        "kind": 5,
+        "importPath": "store.urls",
+        "description": "store.urls",
+        "peekOfCode": "products_router = routers.NestedDefaultRouter(\n    router, 'products', lookup='product')\nproducts_router.register('reviews', views.ReviewViewSet,\n                         basename='product-reviews')\n# urlpatterns = [\n#     path('products/', views.product_list, name='product_list'),\n#     path('products/', views.ProductList.as_view(), name='product_list'),\n#     path('products/<int:pk>/', views.ProductDetail.as_view(), name='product_detail'),\n#     path('collections/', views.CollectionList.as_view(), name='collection_list'),\n#     path('collections/<int:pk>/', views.CollectionDetail.as_view(),",
         "detail": "store.urls",
         "documentation": {}
     },
@@ -960,7 +1011,7 @@
         "kind": 5,
         "importPath": "store.urls",
         "description": "store.urls",
-        "peekOfCode": "urlpatterns = [\n    path('', include(router.urls))\n]",
+        "peekOfCode": "urlpatterns = [\n    # + products_router.urls\n    path(r'', include(router.urls)),\n    path(r'', include(products_router.urls))\n]",
         "detail": "store.urls",
         "documentation": {}
     },
@@ -987,7 +1038,7 @@
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class ReviewViewSet(ModelViewSet):\n    queryset = Review.objects.all()\n    serializer_class = ReviewSerializer\n# class CollectionList(ListCreateAPIView):\n#     def get_queryset(self):\n#         return Collection.objects.annotate(\n#             products_count=Count('products')).all()\n#     def get_serializer_class(self):\n#         return CollectionSerializers\n#     def get_serializer_context(self):",
+        "peekOfCode": "class ReviewViewSet(ModelViewSet):\n    # queryset = Review.objects.all()\n    serializer_class = ReviewSerializer\n    def get_queryset(self):\n        return Review.objects.filter(product_id=self.kwargs['product_pk'])\n    def get_serializer_context(self):\n        return {'product_id': self.kwargs['product_pk']}\n# class CollectionList(ListCreateAPIView):\n#     def get_queryset(self):\n#         return Collection.objects.annotate(",
         "detail": "store.views",
         "documentation": {}
     },

@@ -124,4 +124,6 @@ class Review(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='reviews')
     name = models.CharField(max_length=255)
-    description = models.DateField(auto_now_add=True)
+    description = models.TextField()
+    date = models.DateField(auto_now_add=True)
+    # date = models.DateField(auto_now_add=True)
