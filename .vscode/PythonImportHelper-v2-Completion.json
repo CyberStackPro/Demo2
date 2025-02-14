@@ -73,6 +73,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -385,6 +401,23 @@
         "documentation": {}
     },
     {
+        "label": "django.core.validators",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django.core.validators",
+        "description": "django.core.validators",
+        "detail": "django.core.validators",
+        "documentation": {}
+    },
+    {
+        "label": "MinValueValidator",
+        "importPath": "django.core.validators",
+        "description": "django.core.validators",
+        "isExtraImport": true,
+        "detail": "django.core.validators",
+        "documentation": {}
+    },
+    {
         "label": "HttpRequest",
         "importPath": "django.http.request",
         "description": "django.http.request",
@@ -425,14 +458,6 @@
         "documentation": {}
     },
     {
-        "label": "MinValueValidator",
-        "importPath": "django.core.validators",
-        "description": "django.core.validators",
-        "isExtraImport": true,
-        "detail": "django.core.validators",
-        "documentation": {}
-    },
-    {
         "label": "serializers",
         "importPath": "rest_framework",
         "description": "rest_framework",
@@ -449,6 +474,14 @@
         "documentation": {}
     },
     {
+        "label": "Collection",
+        "importPath": "store.models",
+        "description": "store.models",
+        "isExtraImport": true,
+        "detail": "store.models",
+        "documentation": {}
+    },
+    {
         "label": "Product",
         "importPath": "store.models",
         "description": "store.models",
@@ -457,7 +490,7 @@
         "documentation": {}
     },
     {
-        "label": "Collection",
+        "label": "Review",
         "importPath": "store.models",
         "description": "store.models",
         "isExtraImport": true,
@@ -707,6 +740,15 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "store.migrations.0003_alter_orderitem_product_alter_product_collection_and_more",
+        "description": "store.migrations.0003_alter_orderitem_product_alter_product_collection_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        (\"store\", \"0002_alter_order_options\"),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name=\"orderitem\",\n            name=\"product\",\n            field=models.ForeignKey(\n                on_delete=django.db.models.deletion.PROTECT,",
+        "detail": "store.migrations.0003_alter_orderitem_product_alter_product_collection_and_more",
+        "documentation": {}
+    },
+    {
         "label": "InventoryFilter",
         "kind": 6,
         "importPath": "store.admin",
@@ -864,7 +906,16 @@
         "kind": 6,
         "importPath": "store.models",
         "description": "store.models",
-        "peekOfCode": "class Address(models.Model):\n    street = models.CharField(max_length=250)\n    city = models.CharField(max_length=250)\n    customer = models.OneToOneField(\n        Customer, on_delete=models.CASCADE, primary_key=True)\n    zip = models.CharField(max_length=5)",
+        "peekOfCode": "class Address(models.Model):\n    street = models.CharField(max_length=250)\n    city = models.CharField(max_length=250)\n    customer = models.OneToOneField(\n        Customer, on_delete=models.CASCADE, primary_key=True)\n    zip = models.CharField(max_length=5)\nclass Review(models.Model):\n    product = models.ForeignKey(\n        Product, on_delete=models.CASCADE, related_name='reviews')\n    name = models.CharField(max_length=255)",
+        "detail": "store.models",
+        "documentation": {}
+    },
+    {
+        "label": "Review",
+        "kind": 6,
+        "importPath": "store.models",
+        "description": "store.models",
+        "peekOfCode": "class Review(models.Model):\n    product = models.ForeignKey(\n        Product, on_delete=models.CASCADE, related_name='reviews')\n    name = models.CharField(max_length=255)\n    description = models.DateField(auto_now_add=True)",
         "detail": "store.models",
         "documentation": {}
     },
@@ -883,6 +934,15 @@
         "importPath": "store.serializers",
         "description": "store.serializers",
         "peekOfCode": "class ProductSerializers(serializers.ModelSerializer):\n    class Meta:\n        model = Product\n        # fields = '__all__'\n        fields = ['id', 'title', 'description', 'unit_price',\n                  'slug', 'inventory', 'price_with_tax', 'collection']\n    # id = serializers.IntegerField()\n    # title = serializers.CharField(max_length=255)\n    # price = serializers.DecimalField(\n    #     max_digits=6, decimal_places=2, source='unit_price')",
+        "detail": "store.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "ReviewSerializer",
+        "kind": 6,
+        "importPath": "store.serializers",
+        "description": "store.serializers",
+        "peekOfCode": "class ReviewSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Review\n        fields = ['id', 'date', 'name', 'description', 'product']",
         "detail": "store.serializers",
         "documentation": {}
     },
@@ -919,6 +979,15 @@
         "importPath": "store.views",
         "description": "store.views",
         "peekOfCode": "class CollectionViewSet(ModelViewSet):\n    queryset = Collection.objects.annotate(\n        products_count=Count('products')).all()\n    serializer_class = CollectionSerializers\n    def delete(self, request, pk):\n        collection = get_object_or_404(Collection.objects.annotate(\n            products_count=Count('products')), pk=pk)\n        if collection.count() > 0:\n            return Response({'error': 'Collection cannot be deleted because it is associated with a product.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)\n        collection.delete()",
+        "detail": "store.views",
+        "documentation": {}
+    },
+    {
+        "label": "ReviewViewSet",
+        "kind": 6,
+        "importPath": "store.views",
+        "description": "store.views",
+        "peekOfCode": "class ReviewViewSet(ModelViewSet):\n    queryset = Review.objects.all()\n    serializer_class = ReviewSerializer\n# class CollectionList(ListCreateAPIView):\n#     def get_queryset(self):\n#         return Collection.objects.annotate(\n#             products_count=Count('products')).all()\n#     def get_serializer_class(self):\n#         return CollectionSerializers\n#     def get_serializer_context(self):",
         "detail": "store.views",
         "documentation": {}
     },
