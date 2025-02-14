@@ -993,7 +993,7 @@
         "kind": 5,
         "importPath": "store.urls",
         "description": "store.urls",
-        "peekOfCode": "router = routers.DefaultRouter()\nrouter.register('products', views.ProductViewSet)\nrouter.register('collections', views.CollectionViewSet)\n# pprint(\n#     router.urls\n# )\nproducts_router = routers.NestedDefaultRouter(\n    router, 'products', lookup='product')\nproducts_router.register('reviews', views.ReviewViewSet,\n                         basename='product-reviews')",
+        "peekOfCode": "router = routers.DefaultRouter()\nrouter.register('products', views.ProductViewSet, basename='products')\nrouter.register('collections', views.CollectionViewSet)\n# pprint(\n#     router.urls\n# )\nproducts_router = routers.NestedDefaultRouter(\n    router, 'products', lookup='product')\nproducts_router.register('reviews', views.ReviewViewSet,\n                         basename='product-reviews')",
         "detail": "store.urls",
         "documentation": {}
     },
@@ -1020,7 +1020,7 @@
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class ProductViewSet(ModelViewSet):\n    queryset = Product.objects.select_related('collection').all()\n    serializer_class = ProductSerializers\n    def get_serializer_context(self):\n        return {'request': self.request}\n    def destroy(self, request, *args, **kwargs):\n        if OrderItem.objects.filter(product_id=kwargs['pk']).count() > 0:\n            return Response({'error': 'Product cannot be deleted because it is associated with an order item.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)\n        return super().destroy(request, *args, **kwargs)\n    # def delete(self, request, pk):",
+        "peekOfCode": "class ProductViewSet(ModelViewSet):\n    # queryset = Product.objects.select_related('collection').all()\n    serializer_class = ProductSerializers\n    def get_queryset(self):\n        queryset = Product.objects.select_related('collection').all()\n        collection_id = self.request.query_params.get('collection_id')\n        if collection_id is not None:\n            queryset = queryset.filter(collection_id=collection_id)\n        return queryset\n    def get_serializer_context(self):",
         "detail": "store.views",
         "documentation": {}
     },
