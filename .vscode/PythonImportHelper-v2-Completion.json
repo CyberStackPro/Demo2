@@ -499,6 +499,22 @@
         "documentation": {}
     },
     {
+        "label": "PageNumberPagination",
+        "importPath": "rest_framework.pagination",
+        "description": "rest_framework.pagination",
+        "isExtraImport": true,
+        "detail": "rest_framework.pagination",
+        "documentation": {}
+    },
+    {
+        "label": "PageNumberPagination",
+        "importPath": "rest_framework.pagination",
+        "description": "rest_framework.pagination",
+        "isExtraImport": true,
+        "detail": "rest_framework.pagination",
+        "documentation": {}
+    },
+    {
         "label": "serializers",
         "importPath": "rest_framework",
         "description": "rest_framework",
@@ -664,6 +680,14 @@
         "description": "store.filters",
         "isExtraImport": true,
         "detail": "store.filters",
+        "documentation": {}
+    },
+    {
+        "label": "DefaultPagination",
+        "importPath": "store.pagination",
+        "description": "store.pagination",
+        "isExtraImport": true,
+        "detail": "store.pagination",
         "documentation": {}
     },
     {
@@ -1011,6 +1035,15 @@
         "documentation": {}
     },
     {
+        "label": "DefaultPagination",
+        "kind": 6,
+        "importPath": "store.pagination",
+        "description": "store.pagination",
+        "peekOfCode": "class DefaultPagination(PageNumberPagination):\n    page_size = 10",
+        "detail": "store.pagination",
+        "documentation": {}
+    },
+    {
         "label": "CollectionSerializers",
         "kind": 6,
         "importPath": "store.serializers",
@@ -1069,7 +1102,7 @@
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class ProductViewSet(ModelViewSet):\n    # queryset = Product.objects.select_related('collection').all()\n    queryset = Product.objects.all()\n    serializer_class = ProductSerializers\n    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]\n    search_fields = ['title', 'description']\n    # filterset_fields = ['collection_id']\n    filterset_class = ProductFilter\n    ordering_fields = ['unit_price', 'last_update']\n    # def get_queryset(self):",
+        "peekOfCode": "class ProductViewSet(ModelViewSet):\n    # queryset = Product.objects.select_related('collection').all()\n    queryset = Product.objects.all()\n    serializer_class = ProductSerializers\n    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]\n    search_fields = ['title', 'description']\n    # filterset_fields = ['collection_id']\n    filterset_class = ProductFilter\n    pagination_class = DefaultPagination\n    ordering_fields = ['unit_price', 'last_update']",
         "detail": "store.views",
         "documentation": {}
     },
@@ -1258,7 +1291,7 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False",
+        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False,",
         "detail": "storefront.settings",
         "documentation": {}
     },
@@ -1267,7 +1300,7 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False\n}",
+        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.1/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False,\n    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',",
         "detail": "storefront.settings",
         "documentation": {}
     },
@@ -1276,7 +1309,7 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "STATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False\n}",
+        "peekOfCode": "STATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False,\n    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',\n    # 'PAGE_SIZE': 10\n}",
         "detail": "storefront.settings",
         "documentation": {}
     },
@@ -1285,7 +1318,7 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False\n}",
+        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nREST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False,\n    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',\n    # 'PAGE_SIZE': 10\n}",
         "detail": "storefront.settings",
         "documentation": {}
     },
@@ -1294,7 +1327,7 @@
         "kind": 5,
         "importPath": "storefront.settings",
         "description": "storefront.settings",
-        "peekOfCode": "REST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False\n}",
+        "peekOfCode": "REST_FRAMEWORK = {\n    'COERCE_DECIMAL_TO_STRING': False,\n    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',\n    # 'PAGE_SIZE': 10\n}",
         "detail": "storefront.settings",
         "documentation": {}
     },
