@@ -6,6 +6,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from store.filters import ProductFilter
 from .models import Collection, OrderItem, Product, Review
 from .serializers import CollectionSerializers, ProductSerializers, ReviewSerializer
@@ -24,7 +25,8 @@ class ProductViewSet(ModelViewSet):
     # queryset = Product.objects.select_related('collection').all()
     queryset = Product.objects.all()
     serializer_class = ProductSerializers
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['title', 'description']
     # filterset_fields = ['collection_id']
     filterset_class = ProductFilter
 
