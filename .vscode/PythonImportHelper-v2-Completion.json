@@ -651,6 +651,14 @@
         "documentation": {}
     },
     {
+        "label": "OrderingFilter",
+        "importPath": "rest_framework.filters",
+        "description": "rest_framework.filters",
+        "isExtraImport": true,
+        "detail": "rest_framework.filters",
+        "documentation": {}
+    },
+    {
         "label": "ProductFilter",
         "importPath": "store.filters",
         "description": "store.filters",
@@ -1061,7 +1069,7 @@
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class ProductViewSet(ModelViewSet):\n    # queryset = Product.objects.select_related('collection').all()\n    queryset = Product.objects.all()\n    serializer_class = ProductSerializers\n    filter_backends = [DjangoFilterBackend, SearchFilter]\n    search_fields = ['title', 'description']\n    # filterset_fields = ['collection_id']\n    filterset_class = ProductFilter\n    # def get_queryset(self):\n    #     queryset = Product.objects.select_related('collection').all()",
+        "peekOfCode": "class ProductViewSet(ModelViewSet):\n    # queryset = Product.objects.select_related('collection').all()\n    queryset = Product.objects.all()\n    serializer_class = ProductSerializers\n    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]\n    search_fields = ['title', 'description']\n    # filterset_fields = ['collection_id']\n    filterset_class = ProductFilter\n    ordering_fields = ['unit_price', 'last_update']\n    # def get_queryset(self):",
         "detail": "store.views",
         "documentation": {}
     },
