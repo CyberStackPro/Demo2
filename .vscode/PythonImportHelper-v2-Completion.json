@@ -80,6 +80,14 @@
         "documentation": {}
     },
     {
+        "label": "Cart",
+        "importPath": "store.models",
+        "description": "store.models",
+        "isExtraImport": true,
+        "detail": "store.models",
+        "documentation": {}
+    },
+    {
         "label": "Collection",
         "importPath": "store.models",
         "description": "store.models",
@@ -651,6 +659,14 @@
         "documentation": {}
     },
     {
+        "label": "GenericViewSet",
+        "importPath": "rest_framework.viewsets",
+        "description": "rest_framework.viewsets",
+        "isExtraImport": true,
+        "detail": "rest_framework.viewsets",
+        "documentation": {}
+    },
+    {
         "label": "SearchFilter",
         "importPath": "rest_framework.filters",
         "description": "rest_framework.filters",
@@ -1034,7 +1050,16 @@
         "kind": 6,
         "importPath": "store.serializers",
         "description": "store.serializers",
-        "peekOfCode": "class ReviewSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Review\n        fields = ['id', 'date', 'name', 'description']\n    def create(self, validated_data):\n        product_id = self.context['product_id']\n        return Review.objects.create(product_id=product_id, **validated_data)",
+        "peekOfCode": "class ReviewSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Review\n        fields = ['id', 'date', 'name', 'description']\n    def create(self, validated_data):\n        product_id = self.context['product_id']\n        return Review.objects.create(product_id=product_id, **validated_data)\nclass CartSerializer(serializers.ModelSerializer):\n    id = serializers.UUIDField(read_only=True)\n    class Meta:",
+        "detail": "store.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "CartSerializer",
+        "kind": 6,
+        "importPath": "store.serializers",
+        "description": "store.serializers",
+        "peekOfCode": "class CartSerializer(serializers.ModelSerializer):\n    id = serializers.UUIDField(read_only=True)\n    class Meta:\n        model = Cart\n        fields = ['id']",
         "detail": "store.serializers",
         "documentation": {}
     },
@@ -1043,7 +1068,7 @@
         "kind": 5,
         "importPath": "store.urls",
         "description": "store.urls",
-        "peekOfCode": "router = routers.DefaultRouter()\nrouter.register('products', views.ProductViewSet, basename='products')\nrouter.register('collections', views.CollectionViewSet)\n# pprint(\n#     router.urls\n# )\nproducts_router = routers.NestedDefaultRouter(\n    router, 'products', lookup='product')\nproducts_router.register('reviews', views.ReviewViewSet,\n                         basename='product-reviews')",
+        "peekOfCode": "router = routers.DefaultRouter()\nrouter.register('products', views.ProductViewSet, basename='products')\nrouter.register('collections', views.CollectionViewSet)\nrouter.register('cart', views.CartViewSet, basename='cart')\n# pprint(\n#     router.urls\n# )\nproducts_router = routers.NestedDefaultRouter(\n    router, 'products', lookup='product')\nproducts_router.register('reviews', views.ReviewViewSet,",
         "detail": "store.urls",
         "documentation": {}
     },
@@ -1088,7 +1113,16 @@
         "kind": 6,
         "importPath": "store.views",
         "description": "store.views",
-        "peekOfCode": "class ReviewViewSet(ModelViewSet):\n    # queryset = Review.objects.all()\n    serializer_class = ReviewSerializer\n    def get_queryset(self):\n        return Review.objects.filter(product_id=self.kwargs['product_pk'])\n    def get_serializer_context(self):\n        return {'product_id': self.kwargs['product_pk']}\n# class CollectionList(ListCreateAPIView):\n#     def get_queryset(self):\n#         return Collection.objects.annotate(",
+        "peekOfCode": "class ReviewViewSet(ModelViewSet):\n    # queryset = Review.objects.all()\n    serializer_class = ReviewSerializer\n    def get_queryset(self):\n        return Review.objects.filter(product_id=self.kwargs['product_pk'])\n    def get_serializer_context(self):\n        return {'product_id': self.kwargs['product_pk']}\nclass CartViewSet(CreateModelMixin,  GenericViewSet):\n    queryset = Cart.objects.all()\n    serializer_class = CartSerializer",
+        "detail": "store.views",
+        "documentation": {}
+    },
+    {
+        "label": "CartViewSet",
+        "kind": 6,
+        "importPath": "store.views",
+        "description": "store.views",
+        "peekOfCode": "class CartViewSet(CreateModelMixin,  GenericViewSet):\n    queryset = Cart.objects.all()\n    serializer_class = CartSerializer\n# class CollectionList(ListCreateAPIView):\n#     def get_queryset(self):\n#         return Collection.objects.annotate(\n#             products_count=Count('products')).all()\n#     def get_serializer_class(self):\n#         return CollectionSerializers\n#     def get_serializer_context(self):",
         "detail": "store.views",
         "documentation": {}
     },
